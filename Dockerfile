@@ -74,5 +74,6 @@ RUN set -ex  \
     && apt-get purge -y --auto-remove $buildDeps \
     && rm -rf /usr/src/squid 
 
+COPY squid.conf /etc/squid/squid.conf
 
 CMD ["squid"]
