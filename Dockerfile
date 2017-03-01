@@ -15,7 +15,7 @@ RUN set -ex  \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /usr/src/squid \
     && wget -O squid3.tar.gz "http://www.squid-cache.org/Versions/v3/3.5/squid-${SQUID_VERSION}.tar.gz" \
-    && tar -xzv -f squid3.tar.gz -C ./usr/src/
+    && tar -xzv -f squid3.tar.gz -C ./usr/src/ \
     && rm squid3.tar.gz \
     && cd /usr/src/squid-${SQUID_VERSION} \
     && ./configure \
