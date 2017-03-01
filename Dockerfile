@@ -1,8 +1,8 @@
 FROM ubuntu:16.04
 
 ENV PATH /usr/local/bin:$PATH
-
 ENV LANG C.UTF-8
+ENV SQUID_VERSION 3.5.24
 
 RUN set -ex  \
     && buildDeps="build-essential make wget \
@@ -14,10 +14,10 @@ RUN set -ex  \
     && apt-get install -y $buildDeps --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /usr/src/squid \
-    && wget -O squid3.tar.gz "http://www.squid-cache.org/Versions/v3/3.5/squid-3.5.24.tar.gz" \
-    && tar -xzf /usr/src/squid -f squid3.tar.gz \
-    && rm squid3.tar.gz
-    && cd /usr/src/squid \
+    && wget -O squid3.tar.gz "http://www.squid-cache.org/Versions/v3/3.5/squid-${SQUID_VERSION}.tar.gz" \
+    && tar -xzv -f squid3.tar.gz -C ./usr/src/
+    && rm squid3.tar.gz \
+    && cd /usr/src/squid-${SQUID_VERSION} \
     && ./configure \
         --build=x86_64-linux-gnu \
         --prefix=/usr/local/squid \
