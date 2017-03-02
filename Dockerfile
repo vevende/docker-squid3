@@ -37,7 +37,7 @@ RUN set -ex  \
     && cd /usr/src/squid-${SQUID_VERSION} \
     && ./configure \
         --build=x86_64-linux-gnu \
-        --prefix=/usr/local/squid \
+        --prefix=/usr/local \
         --includedir="\${prefix}/include" \
         --mandir="\${prefix}/share/man" \
         --infodir="\${prefix}/share/info" \
