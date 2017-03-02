@@ -77,10 +77,9 @@ RUN set -ex  \
         --with-pidfile=/var/run/squid.pid  \
         --with-filedescriptors=65536  \
         --with-large-files  \
-        --with-default-user=proxy  \
+        --with-default-user=${SQUID_USER}  \
         --enable-build-info="Ubuntu linux"  \
         --enable-linux-netfilter  \
-        --with-default-user=proxy \
         --with-openssl \
         --enable-ssl  \
         --enable-ssl-crtd \
@@ -93,9 +92,9 @@ RUN set -ex  \
 COPY squid.conf /etc/squid/squid.conf
 
 RUN set -ex \
-    && chown proxy.proxy -R /etc/squid \
-    && chown proxy.proxy -R ${SQUID_CACHE_DIR} \
-    && chown proxy.proxy -R ${SQUID_LOG_DIR}
+    && chown ${SQUID_USER}:${SQUID_USER} -R /etc/squid \
+    && chown ${SQUID_USER}:${SQUID_USER} -R ${SQUID_CACHE_DIR} \
+    && chown ${SQUID_USER}:${SQUID_USER} -R ${SQUID_LOG_DIR}
 
 COPY docker-entrypoint.sh /usr/sbin/
 
