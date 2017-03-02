@@ -1,8 +1,25 @@
 FROM ubuntu:16.04
 
-ENV PATH /usr/local/bin:$PATH
-ENV LANG C.UTF-8
-ENV SQUID_VERSION 3.5.24
+ENV PATH=/usr/local/bin:${PATH} \
+    LANG=C.UTF-8 \
+    SQUID_VERSION=3.5.24 \
+    SQUID_CONFIG=/etc/squid/squid.conf \
+    SQUID_CACHE_DIR=/var/spool/squid \
+    SQUID_LOG_DIR=/var/log/squid \
+    SQUID_USER=proxy \
+    GOSU_VERSION=1.7
+
+RUN set -ex \
+    && apt-get update && apt-get install -y --no-install-recommends ca-certificates wget && rm -rf /var/lib/apt/lists/* \
+    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
+    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+    && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
+    && chmod +x /usr/local/bin/gosu \
+    && gosu nobody true \
+    && apt-get purge -y --auto-remove ca-certificates wget
 
 RUN set -ex  \
     && buildDeps="build-essential make wget \
@@ -30,7 +47,6 @@ RUN set -ex  \
         --srcdir=. \
         --disable-maintainer-mode \
         --disable-dependency-tracking \
-        --disable-silent-rules BUILDCXXFLAGS="-g -O2 -fdebug-prefix-map=/${PKGBUILDDIR}=. -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,relro -Wl,-z,now -Wl,--as-needed" \
         --datadir=/usr/share/squid \
         --sysconfdir=/etc/squid \
         --libexecdir=/usr/lib/squid \
@@ -72,8 +88,19 @@ RUN set -ex  \
     && make install \
     && ldconfig \
     && apt-get purge -y --auto-remove $buildDeps \
-    && rm -rf /usr/src/squid 
+    && rm -rf /usr/src/squid
 
 COPY squid.conf /etc/squid/squid.conf
+
+RUN set -ex \
+    && chown proxy.proxy -R /etc/squid \
+    && chown proxy.proxy -R ${SQUID_CACHE_DIR} \
+    && chown proxy.proxy -R ${SQUID_LOG_DIR}
+
+COPY docker-entrypoint.sh /usr/sbin/
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+EXPOSE 2048 3128 3130 3401 4827
 
 CMD ["squid"]
