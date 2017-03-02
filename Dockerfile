@@ -86,7 +86,8 @@ RUN set -ex  \
     && make -j$(nproc) \
     && make install \
     && ldconfig \
-    && apt-get purge -y --auto-remove $buildDeps \
+    && apt-get purge -y $buildDeps \
+    && apt-mark manual $(apt-mark showauto) \
     && rm -rf /usr/src/squid
 
 COPY squid.conf /etc/squid/squid.conf
