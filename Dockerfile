@@ -79,7 +79,11 @@ RUN set -ex  \
         --with-large-files  \
         --with-default-user=${SQUID_USER}  \
         --enable-build-info="Ubuntu linux"  \
-        --enable-linux-netfilter  \
+        --enable-linux-netfilter \
+            'CFLAGS=-g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wall' \
+            'LDFLAGS=-fPIE -pie -Wl,-z,relro -Wl,-z,now' \
+            'CPPFLAGS=-D_FORTIFY_SOURCE=2' \
+            'CXXFLAGS=-g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security' \
         --with-openssl \
         --enable-ssl  \
         --enable-ssl-crtd \
