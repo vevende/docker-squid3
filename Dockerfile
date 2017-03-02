@@ -6,6 +6,7 @@ ENV PATH=/usr/local/bin:${PATH} \
     SQUID_CONFIG=/etc/squid/squid.conf \
     SQUID_CACHE_DIR=/var/spool/squid \
     SQUID_LOG_DIR=/var/log/squid \
+    SQUID_SSL_DIR=/etc/squid/ssl \
     SQUID_USER=proxy \
     GOSU_VERSION=1.7
 
@@ -97,6 +98,7 @@ RUN set -ex  \
 COPY squid.conf /etc/squid/squid.conf
 
 RUN set -ex \
+    && mkdir -p ${SQUID_SSL_DIR} \
     && chown ${SQUID_USER}:${SQUID_USER} -R /etc/squid \
     && chown ${SQUID_USER}:${SQUID_USER} -R ${SQUID_CACHE_DIR} \
     && chown ${SQUID_USER}:${SQUID_USER} -R ${SQUID_LOG_DIR}
@@ -105,6 +107,6 @@ COPY docker-entrypoint.sh /usr/sbin/
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-EXPOSE 2048 3128 3130 3401 4827
+EXPOSE 2048 3128 3129 3130 3401 4827
 
 CMD ["squid"]
