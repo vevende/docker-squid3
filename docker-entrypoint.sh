@@ -13,8 +13,6 @@ fi
 
 if [ ! -f ${SQUID_SSL_DIR}/squid.crt ]; then
   echo "Creating certificate..."
-  apt update
-  apt install openssl
 
   openssl req -new -batch -newkey rsa:2048 -sha256 -days 365 \
     -nodes -x509 \
