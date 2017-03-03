@@ -10,5 +10,5 @@ default:
 		--volume ${PWD}/tmp/ssl:/etc/squid/ssl \
 		--volume ${PWD}/squid.conf:/etc/squid/squid.conf \
 		--volume ${PWD}/tmp/spool:/var/spool/ \
-		-p 3128:3128 -p 3129:3129 \
+		-p 3128:3128 -p 3129:3129 -p 3130:3130 \
 		vevende/squid3:latest squid

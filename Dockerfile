@@ -29,7 +29,7 @@ RUN set -ex  \
         libkrb5-dev comerr-dev libcap2-dev libexpat1-dev libxml2-dev \
         libnetfilter-conntrack-dev" \
     && apt-get update \
-    && apt-get install -y openssl \
+    && apt-get install -y openssl iputils-ping \
     && apt-get install -y --no-install-recommends $buildDeps \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /usr/src/squid \
