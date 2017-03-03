@@ -25,7 +25,7 @@ fi
 # Initializing SSL db
 
 rm -rf /var/lib/ssl_db
-/usr/lib/squid/ssl_crtd -c -s /var/lib/ssl_db
+/usr/local/lib/squid/ssl_crtd -c -s /var/lib/ssl_db
 chown ${SQUID_USER}:${SQUID_USER} /var/lib/ssl_db
 
 if [ ! -d ${SQUID_CACHE_DIR} ]; then
