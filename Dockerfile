@@ -29,7 +29,8 @@ RUN set -ex  \
         libkrb5-dev comerr-dev libcap2-dev libexpat1-dev libxml2-dev \
         libnetfilter-conntrack-dev" \
     && apt-get update \
-    && apt-get install -y $buildDeps --no-install-recommends \
+    && apt-get install -y openssl \
+    && apt-get install -y --no-install-recommends $buildDeps \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /usr/src/squid \
     && wget -O squid3.tar.gz "http://www.squid-cache.org/Versions/v3/3.5/squid-${SQUID_VERSION}.tar.gz" \
@@ -38,22 +39,19 @@ RUN set -ex  \
     && cd /usr/src/squid-${SQUID_VERSION} \
     && ./configure \
         --build=x86_64-linux-gnu \
+        --srcdir=. \
         --prefix=/usr/local \
         --includedir="\${prefix}/include" \
         --mandir="\${prefix}/share/man" \
         --infodir="\${prefix}/share/info" \
+        --datadir="\${prefix}/share/squid" \
+        --libexecdir="\${prefix}/lib/squid" \
         --sysconfdir=/etc \
         --localstatedir=/var \
-        --libexecdir="\${prefix}/lib/squid3" \
-        --srcdir=. \
         --disable-maintainer-mode \
         --disable-dependency-tracking \
-        --datadir=/usr/share/squid \
-        --sysconfdir=/etc/squid \
-        --libexecdir=/usr/lib/squid \
-        --mandir=/usr/share/man \
-        --enable-inline \
         --disable-arch-native \
+        --enable-inline \
         --enable-async-io=8 \
         --enable-storeio="ufs,aufs,diskd,rock" \
         --enable-removal-policies="lru,heap" \
@@ -67,6 +65,7 @@ RUN set -ex  \
         --enable-auth-ntlm="fake,smb_lm" \
         --enable-external-acl-helpers="file_userip,session,SQL_session,time_quota,unix_group,wbinfo_group"  \
         --enable-url-rewrite-helpers="fake"  \
+        --enable-http-violations \
         --enable-eui  \
         --enable-esi  \
         --enable-icmp  \
@@ -79,7 +78,6 @@ RUN set -ex  \
         --with-filedescriptors=65536  \
         --with-large-files  \
         --with-default-user=${SQUID_USER}  \
-        --enable-build-info="Ubuntu linux"  \
         --enable-linux-netfilter \
             'CFLAGS=-g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wall' \
             'LDFLAGS=-fPIE -pie -Wl,-z,relro -Wl,-z,now' \
