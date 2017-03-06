@@ -21,3 +21,10 @@ docker run \
 iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3129
 iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 443 -j REDIRECT --to-port 3130
 ```
+
+## TODO
+
+ - [] Allow to customize how the SSL certificates are generated.
+ - [] Copy a default squid.conf if is not found.
+ - [] Show examples for iptables
+ - [] Distribute with squid monitoring tools
