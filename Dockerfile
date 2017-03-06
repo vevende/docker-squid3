@@ -93,6 +93,12 @@ RUN set -ex  \
     && apt-mark manual $(apt-mark showauto) \
     && rm -rf /usr/src/squid
 
+# Adding common certificates
+
+RUN set -ex \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates
+
 COPY squid.conf /etc/squid/squid.conf
 
 RUN set -ex \
