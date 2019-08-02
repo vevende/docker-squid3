@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # If given just arguments, treat as squid {options}
 if [ "${1:0:1}" = '-' ]; then
